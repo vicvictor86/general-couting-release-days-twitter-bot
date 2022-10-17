@@ -1,4 +1,4 @@
-import { calculateDaysToRelease, formatDateToISO } from '../../dates/implementations/CalculateDates';
+import { calculateDaysToRelease, calculateHoursToRelease, formatDateToISO } from '../../dates/implementations/CalculateDates';
 import { TwitterApiv2 } from 'twitter-api-v2';
 import getGuest from './SpecialGuests';
 
@@ -10,7 +10,12 @@ function messageToMention(releaseDay: Date, timezone: string, specialMessage?: s
     }
 
     if (daysToRelease === 0) {
-        return specialMessage + "Message of release day";
+        const hoursToRelease = calculateHoursToRelease(releaseDay, timezone);
+        if (hoursToRelease <= 0) {
+            return specialMessage + `Message when the release happened`;
+        }
+
+        return specialMessage + `Message showing the hours to release ${hoursToRelease}`;
     }
 
     if (daysToRelease < 0) {
